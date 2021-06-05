@@ -1,0 +1,22 @@
+str,pl,en
+email,email,email
+password,hasło,password
+forgot_your_password,Zapomniałeś hasła?,Forgot your password?
+sign_in,Zaloguj się,Sign in
+create_account,Utwórz konto,Create an account
+need_register,Nie masz konta? Zarejestruj się,Need an account? Register
+have_account_sign_in,Masz konto? Zaloguj się,Have an account? Sign in
+sign_out,Wyloguj,Sign out
+sign_in_with_google,Zaloguj się przez Google,Sign in with Google
+sign_in_with_facebook,Zaloguj się przez Facebook,Sign in with Facebook
+sign_in_with_email,Zaloguj się przez Email,Sign in with Email
+back,Wróć,Back
+send,Wyślij,Send
+register,Resetracja,Register
+login,Logowanie,Login
+reset_password,Resetowanie hasła,Reset Password
+reset_mail,Na Twój adres wysłaliśmy link do zrestowania hasła,reset_mail
+home,Home,Home
+settings,Ustawienia,Settings
+help,Pomoc,Help
+edit_profile,Edycja profilu,Edit Profile
