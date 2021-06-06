@@ -1,3 +1,7 @@
+import 'package:authentication_riverpod/repositories/repositories.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 abstract class Validators {
   static email(String? v) {
     if (v == null || v.isEmpty) {
@@ -18,5 +22,12 @@ abstract class Validators {
       return "Password should not be greater than 15 characters";
     } else
       return null;
+  }
+
+  static name(BuildContext context, String? name) {
+    if (name == null || name.isEmpty) {
+      return "* Required";
+    }
+    return null;
   }
 }

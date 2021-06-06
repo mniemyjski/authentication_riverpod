@@ -13,10 +13,10 @@ class SignInController extends StateNotifier<SignInState> {
   SignInController(this._reader) : super(SignInState.initial());
 
   signInWithGoogle() async {
-    state = state.copyWith(state: ESignInState.loading);
+    state = state.copyWith(state: ETypeSignInState.loading);
     try {
       await _reader(providerAuthRepository).signInWithGoogle();
-      state = state.copyWith(state: ESignInState.success);
+      state = state.copyWith(state: ETypeSignInState.success);
     } on Failure catch (e) {
       state = SignInState.initial();
       return e;
@@ -25,14 +25,14 @@ class SignInController extends StateNotifier<SignInState> {
 
   signInWithEmail() async {
     try {
-      state.copyWith(state: ESignInState.loading);
-      if (state.formType == ESignInFormType.signIn) {
+      state.copyWith(state: ETypeSignInState.loading);
+      if (state.formType == ETypeSignInForm.signIn) {
         await _reader(providerAuthRepository).signInWithEmailAndPassword(state.email, state.password);
-        state.copyWith(state: ESignInState.success);
-      } else if (state.formType == ESignInFormType.register) {
+        state.copyWith(state: ETypeSignInState.success);
+      } else if (state.formType == ETypeSignInForm.register) {
         await _reader(providerAuthRepository).createUserWithEmailAndPassword(state.email, state.password);
-        state.copyWith(state: ESignInState.success);
-      } else if (state.formType == ESignInFormType.reset) {
+        state.copyWith(state: ETypeSignInState.success);
+      } else if (state.formType == ETypeSignInForm.reset) {
         await _reader(providerAuthRepository).resetPassword(state.email);
         state = SignInState.initial();
       }
@@ -42,7 +42,7 @@ class SignInController extends StateNotifier<SignInState> {
     }
   }
 
-  void changeFormType(ESignInFormType eSignInFormType) async {
+  void changeFormType(ETypeSignInForm eSignInFormType) async {
     state = state.copyWith(formType: eSignInFormType, email: '', password: '');
   }
 

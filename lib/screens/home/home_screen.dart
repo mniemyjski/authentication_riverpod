@@ -1,6 +1,7 @@
 import 'package:authentication_riverpod/utilities/utilities.dart';
 import 'package:authentication_riverpod/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);

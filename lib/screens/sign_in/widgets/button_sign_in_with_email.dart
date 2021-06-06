@@ -1,5 +1,5 @@
 import 'package:authentication_riverpod/screens/sign_in/controllers/sign_in_state.dart';
-import 'package:authentication_riverpod/screens/sign_in/controllers/sing_in_controller.dart';
+import 'package:authentication_riverpod/screens/sign_in/controllers/sign_in_controller.dart';
 import 'package:authentication_riverpod/utilities/utilities.dart';
 import 'package:authentication_riverpod/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ class ButtonSignInWithEmail extends StatelessWidget {
           ],
         ),
         onPressed: () {
-          context.read(providerSignInController.notifier).changeFormType(ESignInFormType.signIn);
+          context.read(providerSignInController.notifier).changeFormType(ETypeSignInForm.signIn);
         });
   }
 }

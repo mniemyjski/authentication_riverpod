@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 
 class Languages {
-  static sign_in_with_google() => 'sign_in_with_google'.tr();
-  static sign_in_with_email() => 'sign_in_with_email'.tr();
+  static String sign_in_with_google() => 'sign_in_with_google'.tr();
+  static String sign_in_with_email() => 'sign_in_with_email'.tr();
 
   static String email() => 'email'.tr();
   static String password() => "password".tr();
@@ -26,6 +26,13 @@ class Languages {
   static String settings() => "settings".tr();
 
   static String help() => "help".tr();
+  static String name() => "name".tr();
 
   static String edit_profile() => "edit_profile".tr();
+
+  static String save() => "save".tr();
+  static String name_not_available() => "name_not_available".tr();
+  static String dark_mode() => "dark_mode".tr();
+
+  static String locale_app() => "locale_app".tr();
 }

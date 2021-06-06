@@ -1,4 +1,4 @@
-import 'package:authentication_riverpod/screens/account/account_create_screen.dart';
+import 'package:authentication_riverpod/screens/account/profile_create_screen.dart';
 import 'package:authentication_riverpod/screens/screens.dart';
 import 'package:flutter/material.dart';
 
@@ -12,13 +12,20 @@ class CustomRouter {
         return SplashScreen.route();
       case SignInScreen.routeName:
         return SignInScreen.route();
-      case AccountCreateScreen.routeName:
-        return AccountCreateScreen.route();
+      case ProfileCreateScreen.routeName:
+        return ProfileCreateScreen.route();
       case HomeScreen.routeName:
         final args = settings.arguments as bool?;
         return HomeScreen.route(args ?? false);
+      case ProfileEditScreen.routeName:
+        return ProfileEditScreen.route();
+      case ProfileScreen.routeName:
+        return ProfileScreen.route();
       case SettingsScreen.routeName:
         return SettingsScreen.route();
+      case CropImageScreen.routeName:
+        final args = settings.arguments as CropScreenArguments;
+        return CropImageScreen.route(args);
       default:
         return _errorRoute();
     }

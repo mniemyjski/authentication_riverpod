@@ -3,3 +3,4 @@ export 'enums.dart';
 export 'languages.dart';
 export 'paths.dart';
 export 'routes.dart';
+export 'validators.dart';

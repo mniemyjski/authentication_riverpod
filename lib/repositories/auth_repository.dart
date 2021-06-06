@@ -4,25 +4,28 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-final providerAuthRepository = Provider<AuthRepository>((ref) => AuthRepository());
+final providerAuthRepository = Provider<AuthRepository>((ref) => _AuthRepository());
 
-abstract class _BaseAuthRepository {
+abstract class AuthRepository {
   Stream<User?> authStateChanges();
   Future<User?> signInWithGoogle();
   Future<User?> signInWithEmailAndPassword(String email, String password);
   Future<User?> createUserWithEmailAndPassword(String email, String password);
-  Future<void> signOut();
   Future<void> resetPassword(String email);
+  Future<void> delete();
+  Future<void> signOut();
+  Stream<User?> get userChanges;
+  User? get getCurrentUser;
 }
 
-class AuthRepository extends _BaseAuthRepository {
-  AuthRepository({
+class _AuthRepository extends AuthRepository {
+  _AuthRepository({
     FirebaseAuth? firebaseAuth,
   }) : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
   final FirebaseAuth _firebaseAuth;
 
-  Stream<User?> get user => _firebaseAuth.userChanges();
+  Stream<User?> get userChanges => _firebaseAuth.userChanges();
 
   User? get getCurrentUser => _firebaseAuth.currentUser;
 
@@ -81,13 +84,38 @@ class AuthRepository extends _BaseAuthRepository {
 
   @override
   Future<void> signOut() async {
-    final googleSignIn = GoogleSignIn();
-    await googleSignIn.signOut();
-    await _firebaseAuth.signOut();
+    try {
+      final googleSignIn = GoogleSignIn();
+      await googleSignIn.signOut();
+      await _firebaseAuth.signOut();
+    } on FirebaseAuthException catch (e) {
+      throw Failure(code: e.code, message: e.message ?? '');
+    } on PlatformException catch (e) {
+      throw Failure(code: e.code, message: e.message ?? '');
+    }
   }
 
   @override
   Future<void> resetPassword(String email) async {
-    await _firebaseAuth.sendPasswordResetEmail(email: email);
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw Failure(code: e.code, message: e.message ?? '');
+    } on PlatformException catch (e) {
+      throw Failure(code: e.code, message: e.message ?? '');
+    }
+  }
+
+  @override
+  Future<void> delete() async {
+    try {
+      final googleSignIn = GoogleSignIn();
+      await googleSignIn.signOut();
+      await _firebaseAuth.currentUser!.delete();
+    } on FirebaseAuthException catch (e) {
+      throw Failure(code: e.code, message: e.message ?? '');
+    } on PlatformException catch (e) {
+      throw Failure(code: e.code, message: e.message ?? '');
+    }
   }
 }

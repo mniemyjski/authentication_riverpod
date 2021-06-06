@@ -12,6 +12,9 @@ class Account extends Equatable {
   final String photoUrl;
 
   @override
+  bool get stringify => true;
+
+  @override
   List<Object> get props => [this.name, this.photoUrl, this.uid];
 
   factory Account.fromMap(Map<String, dynamic> map) {

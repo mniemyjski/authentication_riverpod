@@ -18,18 +18,21 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          onPrimary: textColor,
-          primary: backgroundColor,
-          minimumSize: Size(50, 56),
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(2)),
+      child: ConstrainedBox(
+        constraints: new BoxConstraints(maxWidth: 450),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            onPrimary: textColor,
+            primary: backgroundColor,
+            minimumSize: Size(56, 56),
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(2)),
+            ),
           ),
+          onPressed: onPressed,
+          child: child,
         ),
-        onPressed: onPressed,
-        child: child,
       ),
     );
   }

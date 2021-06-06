@@ -1,8 +1,8 @@
 import 'package:authentication_riverpod/models/failure_model.dart';
 import 'package:equatable/equatable.dart';
 
-enum ESignInState { initial, loading, success }
-enum ESignInFormType { initial, signIn, register, reset }
+enum ETypeSignInState { initial, loading, success }
+enum ETypeSignInForm { initial, signIn, register, reset }
 
 class SignInState extends Equatable {
   SignInState({
@@ -15,9 +15,12 @@ class SignInState extends Equatable {
 
   final String email;
   final String password;
-  final ESignInState state;
-  final ESignInFormType formType;
+  final ETypeSignInState state;
+  final ETypeSignInForm formType;
   final Failure? failure;
+
+  @override
+  bool get stringify => true;
 
   @override
   List<Object?> get props => [email, password, state, formType, failure];
@@ -26,16 +29,16 @@ class SignInState extends Equatable {
     return SignInState(
       email: '',
       password: '',
-      state: ESignInState.initial,
-      formType: ESignInFormType.initial,
+      state: ETypeSignInState.initial,
+      formType: ETypeSignInForm.initial,
     );
   }
 
   SignInState copyWith({
     String? email,
     String? password,
-    ESignInState? state,
-    ESignInFormType? formType,
+    ETypeSignInState? state,
+    ETypeSignInForm? formType,
     Failure? failure,
   }) {
     if ((email == null || identical(email, this.email)) &&

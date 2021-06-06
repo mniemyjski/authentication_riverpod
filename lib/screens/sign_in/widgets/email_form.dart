@@ -1,7 +1,7 @@
 import 'package:authentication_riverpod/models/models.dart';
-import 'package:authentication_riverpod/screens/sign_in/validators.dart';
+import 'package:authentication_riverpod/utilities/validators.dart';
 import 'package:authentication_riverpod/screens/sign_in/controllers/sign_in_state.dart';
-import 'package:authentication_riverpod/screens/sign_in/controllers/sing_in_controller.dart';
+import 'package:authentication_riverpod/screens/sign_in/controllers/sign_in_controller.dart';
 import 'package:authentication_riverpod/utilities/utilities.dart';
 import 'package:authentication_riverpod/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +59,7 @@ class _EmailFormState extends State<EmailForm> {
                   ),
                 ),
               ),
-              if (model.formType != ESignInFormType.reset)
+              if (model.formType != ETypeSignInForm.reset)
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Form(
@@ -95,17 +95,17 @@ class _EmailFormState extends State<EmailForm> {
                     ),
                     onPressed: () => _onPressedSignInOrRegister(model)),
               ),
-              if (model.formType != ESignInFormType.reset)
+              if (model.formType != ETypeSignInForm.reset)
                 TextButton(
                     onPressed: () {
-                      context.read(providerSignInController.notifier).changeFormType(ESignInFormType.reset);
+                      context.read(providerSignInController.notifier).changeFormType(ETypeSignInForm.reset);
                     },
                     child: Text(Languages.forgot_your_password())),
-              if (model.formType != ESignInFormType.reset)
+              if (model.formType != ETypeSignInForm.reset)
                 TextButton(
                     onPressed: () => _onPressedChangeTypeForm(model),
                     child: Text(
-                      model.formType == ESignInFormType.signIn ? Languages.need_register() : Languages.have_account_sign_in(),
+                      model.formType == ETypeSignInForm.signIn ? Languages.need_register() : Languages.have_account_sign_in(),
                     )),
             ],
           ),
@@ -115,28 +115,28 @@ class _EmailFormState extends State<EmailForm> {
   }
 
   String _buttonName(SignInState model) {
-    if (model.formType == ESignInFormType.signIn) return Languages.sign_in();
-    if (model.formType == ESignInFormType.register) return Languages.create_account();
+    if (model.formType == ETypeSignInForm.signIn) return Languages.sign_in();
+    if (model.formType == ETypeSignInForm.register) return Languages.create_account();
     return Languages.send();
   }
 
   void _onPressedChangeTypeForm(SignInState model) {
-    if (model.formType == ESignInFormType.signIn) {
-      context.read(providerSignInController.notifier).changeFormType(ESignInFormType.register);
+    if (model.formType == ETypeSignInForm.signIn) {
+      context.read(providerSignInController.notifier).changeFormType(ETypeSignInForm.register);
     } else {
-      context.read(providerSignInController.notifier).changeFormType(ESignInFormType.signIn);
+      context.read(providerSignInController.notifier).changeFormType(ETypeSignInForm.signIn);
     }
   }
 
   void _onPressedSignInOrRegister(SignInState model) async {
     Failure? failure;
-    if (model.formType == ESignInFormType.reset && _formKeyEmail.currentState!.validate()) {
+    if (model.formType == ETypeSignInForm.reset && _formKeyEmail.currentState!.validate()) {
       context.read(providerSignInController.notifier).changeValue(email: _controllerEmail.text);
       failure = await context.read(providerSignInController.notifier).signInWithEmail();
       if (failure == null) customFlashBar(context, Languages.reset_mail());
     }
 
-    if (model.formType != ESignInFormType.reset && _formKeyEmail.currentState!.validate() && _formKeyPassword.currentState!.validate()) {
+    if (model.formType != ETypeSignInForm.reset && _formKeyEmail.currentState!.validate() && _formKeyPassword.currentState!.validate()) {
       context.read(providerSignInController.notifier).changeValue(email: _controllerEmail.text, password: _controllerPassword.text);
       failure = await context.read(providerSignInController.notifier).signInWithEmail();
     }

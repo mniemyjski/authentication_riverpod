@@ -1,5 +1,11 @@
+import 'package:authentication_riverpod/controlers/account/account_controller.dart';
+import 'package:authentication_riverpod/controlers/auth/auth_controller.dart';
+import 'package:authentication_riverpod/controlers/auth/auth_state.dart';
+import 'package:authentication_riverpod/screens/screens.dart';
+import 'package:authentication_riverpod/widgets/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Header extends StatelessWidget {
   const Header({Key? key}) : super(key: key);
@@ -24,38 +30,16 @@ class Header extends StatelessWidget {
           decoration: BoxDecoration(color: Theme.of(context).primaryColor),
           child: GestureDetector(
             onTap: () {
-              // Navigator.of(context).pushNamed(AccountEditScreen.routeName);
+              Navigator.of(context).pushNamed(ProfileEditScreen.routeName);
             },
             child: Stack(children: <Widget>[
               Positioned(
                 bottom: 40.0,
                 left: 16.0,
-                child: CircleAvatar(
-                  radius: 55,
-                  backgroundColor: Colors.black12,
-                  child: false
-                      ? CachedNetworkImage(
-                          imageUrl: "",
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.black87, width: 1.0),
-                              image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
-                            ),
-                          ),
-                          placeholder: (context, url) => CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => Icon(
-                            Icons.account_circle,
-                            size: 110,
-                            color: Colors.white,
-                          ),
-                        )
-                      : Icon(
-                          Icons.account_circle,
-                          size: 110,
-                          color: Colors.white,
-                        ),
-                ),
+                child: Consumer(builder: (context, watch, child) {
+                  final model = watch(providerAccountController);
+                  return CustomAvatar(url: model.account?.photoUrl ?? '');
+                }),
               ),
               Positioned(
                   bottom: 8.0,

@@ -1,6 +1,6 @@
 import 'package:authentication_riverpod/controlers/auth/auth_controller.dart';
 import 'package:authentication_riverpod/controlers/auth/auth_state.dart';
-import 'package:authentication_riverpod/screens/account/account_create_screen.dart';
+import 'package:authentication_riverpod/screens/account/profile_create_screen.dart';
 import 'package:authentication_riverpod/screens/home/home_screen.dart';
 import 'package:authentication_riverpod/screens/screens.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +12,6 @@ class SplashScreen extends StatelessWidget {
   static const String routeName = '/';
 
   static Route route() {
-    // return MaterialPageRoute(
-    //   settings: const RouteSettings(name: routeName),
-    //   builder: (_) => SplashScreen(),
-    // );
     return PageRouteBuilder(
       settings: const RouteSettings(name: routeName),
       transitionDuration: const Duration(seconds: 0),
@@ -28,14 +24,14 @@ class SplashScreen extends StatelessWidget {
     return ProviderListener<AuthState>(
         provider: providerAuthController,
         onChange: (context, model) {
-          if (model.status == EAuthState.uncreated) {
-            Navigator.pushNamed(context, AccountCreateScreen.routeName);
+          if (model.state == ETypeAuthState.uncreated) {
+            Navigator.pushNamed(context, ProfileCreateScreen.routeName);
           }
-          if (model.status == EAuthState.created) {
+          if (model.state == ETypeAuthState.created) {
             Navigator.pushNamed(context, HomeScreen.routeName, arguments: true);
           }
 
-          if (model.status == EAuthState.unauthenticated) {
+          if (model.state == ETypeAuthState.unauthenticated) {
             Navigator.pushNamed(context, SignInScreen.routeName);
           }
         },

@@ -1,5 +1,5 @@
 import 'package:authentication_riverpod/screens/sign_in/controllers/sign_in_state.dart';
-import 'package:authentication_riverpod/screens/sign_in/controllers/sing_in_controller.dart';
+import 'package:authentication_riverpod/screens/sign_in/controllers/sign_in_controller.dart';
 import 'package:authentication_riverpod/screens/sign_in/widgets/button_sign_in_with_email.dart';
 import 'package:authentication_riverpod/screens/sign_in/widgets/button_sign_in_with_google.dart';
 import 'package:authentication_riverpod/screens/sign_in/widgets/email_form.dart';
@@ -28,7 +28,7 @@ class SignInScreen extends StatelessWidget {
         builder: (context, watch, child) {
           final model = watch(providerSignInController);
 
-          if (model.state == ESignInState.loading)
+          if (model.state != ETypeSignInState.initial)
             return const Scaffold(
                 body: Center(
               child: CircularProgressIndicator(),
@@ -36,12 +36,12 @@ class SignInScreen extends StatelessWidget {
 
           return Scaffold(
             resizeToAvoidBottomInset: false,
-            appBar: (model.formType != ESignInFormType.initial)
+            appBar: (model.formType != ETypeSignInForm.initial)
                 ? AppBar(
                     title: Text(_titleName(model)),
                     leading: IconButton(
                       icon: Icon(Icons.arrow_back_ios),
-                      onPressed: () => context.read(providerSignInController.notifier).changeFormType(ESignInFormType.initial),
+                      onPressed: () => context.read(providerSignInController.notifier).changeFormType(ETypeSignInForm.initial),
                     ))
                 : null,
             body: Column(
@@ -58,9 +58,9 @@ class SignInScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (model.formType == ESignInFormType.initial) ButtonSignInWithGoogle(),
-                if (model.formType == ESignInFormType.initial) ButtonSignInWithEmail(),
-                if (model.formType != ESignInFormType.initial) EmailForm(),
+                if (model.formType == ETypeSignInForm.initial) ButtonSignInWithGoogle(),
+                if (model.formType == ETypeSignInForm.initial) ButtonSignInWithEmail(),
+                if (model.formType != ETypeSignInForm.initial) EmailForm(),
               ],
             ),
           );
@@ -70,8 +70,8 @@ class SignInScreen extends StatelessWidget {
   }
 
   String _titleName(SignInState model) {
-    if (model.formType == ESignInFormType.signIn) return Languages.login();
-    if (model.formType == ESignInFormType.register) return Languages.register();
+    if (model.formType == ETypeSignInForm.signIn) return Languages.login();
+    if (model.formType == ETypeSignInForm.register) return Languages.register();
     return Languages.reset_password();
   }
 }
