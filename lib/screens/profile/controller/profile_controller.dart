@@ -19,7 +19,7 @@ class ProfileController extends StateNotifier<ProfileState> {
     if (user != null) {
       Account account = state.account.copyWith(uid: user.uid, photoUrl: user.photoURL);
       _read(providerAccountRepository).createAccount(account);
-      _read(providerPreferenceRepository).createPreference(Preference(), user.uid);
+      _read(providerPreferenceRepository).createPreference(Preference(init: true), user.uid);
     }
   }
 
