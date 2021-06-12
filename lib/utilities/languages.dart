@@ -35,4 +35,7 @@ class Languages {
   static String dark_mode() => "dark_mode".tr();
 
   static String locale_app() => "locale_app".tr();
+  static String skip() => "skip".tr();
+  static String next() => "next".tr();
+  static String done() => "done".tr();
 }

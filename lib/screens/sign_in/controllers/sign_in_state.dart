@@ -8,8 +8,8 @@ class SignInState extends Equatable {
   SignInState({
     required this.email,
     required this.password,
-    required this.state,
-    required this.formType,
+    this.state = ETypeSignInState.initial,
+    this.formType = ETypeSignInForm.initial,
     this.failure,
   });
 
@@ -29,8 +29,6 @@ class SignInState extends Equatable {
     return SignInState(
       email: '',
       password: '',
-      state: ETypeSignInState.initial,
-      formType: ETypeSignInForm.initial,
     );
   }
 

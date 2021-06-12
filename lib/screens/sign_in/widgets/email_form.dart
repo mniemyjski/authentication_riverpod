@@ -5,29 +5,16 @@ import 'package:authentication_riverpod/screens/sign_in/controllers/sign_in_cont
 import 'package:authentication_riverpod/utilities/utilities.dart';
 import 'package:authentication_riverpod/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class EmailForm extends StatefulWidget {
-  const EmailForm({Key? key}) : super(key: key);
-
-  @override
-  _EmailFormState createState() => _EmailFormState();
-}
-
-class _EmailFormState extends State<EmailForm> {
-  final TextEditingController _controllerEmail = TextEditingController();
-  final TextEditingController _controllerPassword = TextEditingController();
+class EmailForm extends HookWidget {
   final GlobalKey<FormState> _formKeyEmail = GlobalKey();
   final GlobalKey<FormState> _formKeyPassword = GlobalKey();
-
-  @override
-  void dispose() {
-    _controllerEmail.dispose();
-    _controllerPassword.dispose();
-    super.dispose();
-  }
+  final _controllerEmail = useTextEditingController();
+  final _controllerPassword = useTextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -89,11 +76,11 @@ class _EmailFormState extends State<EmailForm> {
                           size: 40,
                           color: Colors.white,
                         ),
-                        Text(_buttonName(model)),
+                        Text(_buttonName(context, model)),
                         Container(),
                       ],
                     ),
-                    onPressed: () => _onPressedSignInOrRegister(model)),
+                    onPressed: () => _onPressedSignInOrRegister(context, model)),
               ),
               if (model.formType != ETypeSignInForm.reset)
                 TextButton(
@@ -103,7 +90,7 @@ class _EmailFormState extends State<EmailForm> {
                     child: Text(Languages.forgot_your_password())),
               if (model.formType != ETypeSignInForm.reset)
                 TextButton(
-                    onPressed: () => _onPressedChangeTypeForm(model),
+                    onPressed: () => _onPressedChangeTypeForm(context, model),
                     child: Text(
                       model.formType == ETypeSignInForm.signIn ? Languages.need_register() : Languages.have_account_sign_in(),
                     )),
@@ -114,13 +101,13 @@ class _EmailFormState extends State<EmailForm> {
     });
   }
 
-  String _buttonName(SignInState model) {
+  String _buttonName(BuildContext context, SignInState model) {
     if (model.formType == ETypeSignInForm.signIn) return Languages.sign_in();
     if (model.formType == ETypeSignInForm.register) return Languages.create_account();
     return Languages.send();
   }
 
-  void _onPressedChangeTypeForm(SignInState model) {
+  void _onPressedChangeTypeForm(BuildContext context, SignInState model) {
     if (model.formType == ETypeSignInForm.signIn) {
       context.read(providerSignInController.notifier).changeFormType(ETypeSignInForm.register);
     } else {
@@ -128,17 +115,17 @@ class _EmailFormState extends State<EmailForm> {
     }
   }
 
-  void _onPressedSignInOrRegister(SignInState model) async {
+  void _onPressedSignInOrRegister(BuildContext context, SignInState model) async {
     Failure? failure;
     if (model.formType == ETypeSignInForm.reset && _formKeyEmail.currentState!.validate()) {
       context.read(providerSignInController.notifier).changeValue(email: _controllerEmail.text);
-      failure = await context.read(providerSignInController.notifier).signInWithEmail();
+      failure = await context.read(providerSignInController.notifier).signInWithEmail(context);
       if (failure == null) customFlashBar(context, Languages.reset_mail());
     }
 
     if (model.formType != ETypeSignInForm.reset && _formKeyEmail.currentState!.validate() && _formKeyPassword.currentState!.validate()) {
       context.read(providerSignInController.notifier).changeValue(email: _controllerEmail.text, password: _controllerPassword.text);
-      failure = await context.read(providerSignInController.notifier).signInWithEmail();
+      failure = await context.read(providerSignInController.notifier).signInWithEmail(context);
     }
     if (failure != null) customFlashBar(context, failure.message);
   }

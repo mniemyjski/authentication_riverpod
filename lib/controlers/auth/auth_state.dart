@@ -16,6 +16,9 @@ class AuthState extends Equatable {
   final Failure? failure;
 
   @override
+  bool get stringify => true;
+
+  @override
   List<Object?> get props => [user, state, failure];
 
   factory AuthState.initial() {

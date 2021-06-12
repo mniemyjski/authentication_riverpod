@@ -9,13 +9,21 @@ customFlashBar(BuildContext context, String text) {
       return Padding(
         padding: const EdgeInsets.all(8),
         child: Flash(
+          backgroundColor: Colors.black54.withOpacity(0.6),
           controller: controller,
-          behavior: FlashBehavior.floating,
+          behavior: FlashBehavior.fixed,
           position: FlashPosition.bottom,
           boxShadows: kElevationToShadow[4],
           horizontalDismissDirection: HorizontalDismissDirection.horizontal,
           child: FlashBar(
-            content: Text(text),
+            content: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: 10),
+              child: Center(
+                  child: Text(
+                text,
+                style: TextStyle(color: Colors.white),
+              )),
+            ),
           ),
         ),
       );

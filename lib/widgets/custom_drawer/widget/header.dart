@@ -30,6 +30,7 @@ class Header extends StatelessWidget {
           decoration: BoxDecoration(color: Theme.of(context).primaryColor),
           child: GestureDetector(
             onTap: () {
+              Navigator.pop(context);
               Navigator.of(context).pushNamed(ProfileEditScreen.routeName);
             },
             child: Stack(children: <Widget>[
@@ -44,10 +45,13 @@ class Header extends StatelessWidget {
               Positioned(
                   bottom: 8.0,
                   left: 16.0,
-                  child: Text(
-                    "",
-                    style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w500),
-                  )),
+                  child: Consumer(builder: (context, watch, child) {
+                    final model = watch(providerAccountController);
+                    return Text(
+                      model.account?.name ?? '',
+                      style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w500),
+                    );
+                  })),
             ]),
           )),
     );

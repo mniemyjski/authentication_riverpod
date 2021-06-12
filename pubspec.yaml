@@ -15,28 +15,32 @@ dependencies:
   easy_localization: ^3.0.0
   easy_localization_loader: ^1.0.0
 
-  flutter_riverpod: ^0.14.0+3
+  hooks_riverpod: ^0.14.0+4
   equatable: ^2.0.2
 
-  firebase_core: ^1.2.1
-  firebase_auth: ^1.3.0
-  firebase_storage: ^8.1.1
-  firebase_analytics: ^8.1.1
+  shared_preferences: ^2.0.6
+
+  firebase_core: ^1.3.0
+  firebase_auth: ^1.4.1
+  firebase_storage: ^8.1.3
+  firebase_analytics: ^8.1.2
 
   google_sign_in: ^5.0.4
 
-  cloud_firestore: ^2.2.1
+  cloud_firestore: ^2.2.2
 
-  connectivity_plus: ^1.0.1
+  connectivity_plus: ^1.0.2
   flash: ^2.0.0
 
-  font_awesome_flutter: ^9.0.0
+  font_awesome_flutter: ^9.1.0
   google_fonts: ^2.1.0
   cupertino_icons: ^1.0.3
 
   cached_network_image: ^3.0.0
-  extended_image: ^4.1.0
-  image_picker: ^0.8.0+1
+  crop_your_image: ^0.5.3
+  image_picker: ^0.8.0+3
+
+  introduction_screen: ^2.1.0
 
 dev_dependencies:
   flutter_test:

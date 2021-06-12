@@ -1,52 +1,53 @@
 import 'dart:async';
 
+import 'package:authentication_riverpod/controlers/controllers.dart';
 import 'package:authentication_riverpod/controlers/preference/preference_state.dart';
 import 'package:authentication_riverpod/models/models.dart';
 import 'package:authentication_riverpod/repositories/repositories.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 
-final providerPreferenceController = StateNotifierProvider<PreferenceController, PreferenceState>(
-  (ref) => PreferenceController(ref.read),
+final providerPreferenceController = StateNotifierProvider.autoDispose<PreferenceController, PreferenceState>(
+  (ref) {
+    return PreferenceController(
+      ref.read,
+      ref.watch(providerAuthState).data?.value?.uid,
+    );
+  },
 );
 
 class PreferenceController extends StateNotifier<PreferenceState> {
   final Reader _read;
-  late StreamSubscription<Preference?> _subscription;
-  late StreamSubscription<User?> _userSubscription;
-  late String _uid;
+  final String? _uid;
 
-  PreferenceController(this._read) : super(PreferenceState.initial()) {
-    _userSubscription = _read(providerAuthRepository).userChanges.listen((user) {
-      if (user != null) {
-        _uid = user.uid;
-        _subscription = _read(providerPreferenceRepository).streamPreference(_uid).listen((preference) {
-          preference != null
-              ? state = state.copyWith(
-                  preference: preference,
-                  state: ETypePreferenceState.created,
-                )
-              : state = state.copyWith(
-                  state: ETypePreferenceState.uncreated,
-                );
-        });
-      }
-    });
+  late StreamSubscription<Preference?>? _subscription;
+
+  PreferenceController(this._read, this._uid) : super(PreferenceState.initial()) {
+    if (_uid != null) {
+      _subscription = _read(providerPreferenceRepository).streamPreference(_uid!).listen((preference) {
+        preference != null
+            ? state = state.copyWith(
+                preference: preference,
+                state: ETypePreferenceState.created,
+              )
+            : state = state.copyWith(
+                state: ETypePreferenceState.uncreated,
+              );
+      });
+    } else {
+      state = PreferenceState.initial();
+    }
   }
 
   @override
   void dispose() {
-    _userSubscription.cancel();
-    _subscription.cancel();
-
+    try {
+      _subscription?.cancel();
+    } catch (_) {}
     super.dispose();
   }
 
-  void createPreference(Preference preference) {
-    _read(providerPreferenceRepository).createPreference(Preference(darkMode: false, localeApp: 'pl'), _uid);
-  }
-
   void updatePreference(Preference preference) {
-    _read(providerPreferenceRepository).updatePreference(preference, _uid);
+    _read(providerPreferenceRepository).updatePreference(preference, _uid!);
   }
 }

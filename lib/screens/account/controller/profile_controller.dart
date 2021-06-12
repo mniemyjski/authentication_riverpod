@@ -5,7 +5,7 @@ import 'package:authentication_riverpod/screens/account/controller/profile_state
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final providerProfileController = StateNotifierProvider<ProfileController, ProfileState>(
+final providerProfileController = StateNotifierProvider.autoDispose<ProfileController, ProfileState>(
   (ref) => ProfileController(ref.read),
 );
 
@@ -19,7 +19,7 @@ class ProfileController extends StateNotifier<ProfileState> {
     if (user != null) {
       Account account = state.account.copyWith(uid: user.uid, photoUrl: user.photoURL);
       _read(providerAccountRepository).createAccount(account);
-      _read(providerPreferenceRepository).createPreference(Preference(darkMode: false, localeApp: 'pl'), user.uid);
+      _read(providerPreferenceRepository).createPreference(Preference(), user.uid);
     }
   }
 

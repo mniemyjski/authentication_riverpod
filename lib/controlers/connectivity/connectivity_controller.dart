@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:authentication_riverpod/controlers/connectivity/connectivity_state.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final providerConnectivityController = StateNotifierProvider<ConnectivityController, ConnectivityState>(

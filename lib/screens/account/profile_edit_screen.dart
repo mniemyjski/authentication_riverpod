@@ -107,7 +107,7 @@ _changeImage(BuildContext context) async {
     var image = await Navigator.pushNamed(
       context,
       CropImageScreen.routeName,
-      arguments: CropScreenArguments(uint8List: uint8List),
+      arguments: CropScreenArguments(uint8List: uint8List, isCircleUi: true),
     );
     if (image != null) {
       String url = await context.read(providerStorageRepositories).uploadToFirebaseStorage(

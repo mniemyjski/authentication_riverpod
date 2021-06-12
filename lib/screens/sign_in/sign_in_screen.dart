@@ -5,9 +5,12 @@ import 'package:authentication_riverpod/screens/sign_in/widgets/button_sign_in_w
 import 'package:authentication_riverpod/screens/sign_in/widgets/email_form.dart';
 import 'package:authentication_riverpod/utilities/utilities.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class SignInScreen extends StatelessWidget {
+import 'package:logger/logger.dart';
+
+class SignInScreen extends HookWidget {
   const SignInScreen({Key? key}) : super(key: key);
 
   static const String routeName = '/sign-in';
@@ -22,49 +25,41 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = useProvider(providerSignInController);
+
     return WillPopScope(
       onWillPop: () async => false,
-      child: Consumer(
-        builder: (context, watch, child) {
-          final model = watch(providerSignInController);
-
-          if (model.state != ETypeSignInState.initial)
-            return const Scaffold(
-                body: Center(
-              child: CircularProgressIndicator(),
-            ));
-
-          return Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: (model.formType != ETypeSignInForm.initial)
-                ? AppBar(
-                    title: Text(_titleName(model)),
-                    leading: IconButton(
-                      icon: Icon(Icons.arrow_back_ios),
-                      onPressed: () => context.read(providerSignInController.notifier).changeFormType(ETypeSignInForm.initial),
-                    ))
-                : null,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 32),
-                  child: Text(
-                    Constants.app_name(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 56,
-                    ),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: (model.formType != ETypeSignInForm.initial)
+            ? AppBar(
+                title: Text(_titleName(model)),
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back_ios),
+                  onPressed: () => context.read(providerSignInController.notifier).changeFormType(ETypeSignInForm.initial),
+                ))
+            : null,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (model.state != ETypeSignInState.loading)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 32),
+                child: Text(
+                  Constants.app_name(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 56,
                   ),
                 ),
-                if (model.formType == ETypeSignInForm.initial) ButtonSignInWithGoogle(),
-                if (model.formType == ETypeSignInForm.initial) ButtonSignInWithEmail(),
-                if (model.formType != ETypeSignInForm.initial) EmailForm(),
-              ],
-            ),
-          );
-        },
+              ),
+            if (model.state != ETypeSignInState.initial) Center(child: CircularProgressIndicator()),
+            ButtonSignInWithGoogle(),
+            ButtonSignInWithEmail(),
+            if (model.formType != ETypeSignInForm.initial) EmailForm(),
+          ],
+        ),
       ),
     );
   }

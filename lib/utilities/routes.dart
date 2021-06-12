@@ -1,4 +1,5 @@
 import 'package:authentication_riverpod/screens/account/profile_create_screen.dart';
+import 'package:authentication_riverpod/screens/introduction/introduction_screen.dart';
 import 'package:authentication_riverpod/screens/screens.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,8 @@ class CustomRouter {
         return ProfileScreen.route();
       case SettingsScreen.routeName:
         return SettingsScreen.route();
+      case IntroScreen.routeName:
+        return IntroScreen.route();
       case CropImageScreen.routeName:
         final args = settings.arguments as CropScreenArguments;
         return CropImageScreen.route(args);

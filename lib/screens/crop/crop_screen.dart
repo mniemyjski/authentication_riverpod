@@ -1,34 +1,37 @@
 import 'dart:typed_data';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:extended_image/extended_image.dart' hide File;
+import 'package:crop_your_image/crop_your_image.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:image/image.dart';
+import 'package:logger/logger.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 class CropScreenArguments {
-  CropScreenArguments({required this.uint8List});
+  CropScreenArguments({required this.uint8List, required this.isCircleUi});
   final Uint8List uint8List;
+  final isCircleUi;
 }
 
-class CropImageScreen extends StatefulWidget {
-  const CropImageScreen({Key? key, required this.uint8List}) : super(key: key);
+class CropImageScreen extends HookWidget {
+  CropImageScreen({
+    Key? key,
+    required this.uint8List,
+    required this.isCircleUi,
+  }) : super(key: key);
 
   final Uint8List uint8List;
-  static const String routeName = '/crop_image';
+  final isCircleUi;
 
-  static Route route(CropScreenArguments cropScreenArguments) {
+  static Route route(CropScreenArguments args) {
     return MaterialPageRoute(
       settings: const RouteSettings(name: routeName),
-      builder: (context) => CropImageScreen(uint8List: cropScreenArguments.uint8List),
+      builder: (context) => CropImageScreen(uint8List: args.uint8List, isCircleUi: args.isCircleUi),
     );
   }
 
-  @override
-  _CropImageScreenState createState() => _CropImageScreenState();
-}
-
-class _CropImageScreenState extends State<CropImageScreen> {
-  final GlobalKey<ExtendedImageEditorState> editorKey = GlobalKey<ExtendedImageEditorState>();
+  static const String routeName = '/crop_image';
+  final _cropController = CropController();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,7 @@ class _CropImageScreenState extends State<CropImageScreen> {
         title: Text('Crop'),
         actions: <Widget>[
           IconButton(
-            onPressed: () => _save(context),
+            onPressed: () => _save(context, isCircleUi, _cropController),
             icon: Icon(Icons.save),
           )
         ],
@@ -49,49 +52,30 @@ class _CropImageScreenState extends State<CropImageScreen> {
               color: Colors.white,
               padding: EdgeInsets.all(8),
               child: Consumer(builder: (context, watch, child) {
-                return ExtendedImage.memory(
-                  widget.uint8List,
-                  fit: BoxFit.contain,
-                  cacheRawData: true,
-                  mode: ExtendedImageMode.editor,
-                  extendedImageEditorKey: editorKey,
-                  initEditorConfigHandler: (state) {
-                    return EditorConfig(
-                      maxScale: 8.0,
-                      cropRectPadding: EdgeInsets.all(20.0),
-                      hitTestSize: 20.0,
-                    );
+                return Crop(
+                  image: uint8List,
+                  controller: _cropController,
+                  onCropped: (image) {
+                    Image? i = decodeImage(image);
+                    if (i != null) {
+                      encodeJpg(i, quality: 50);
+                      return Navigator.pop(context, image);
+                    }
                   },
+                  initialSize: 0.5,
+                  withCircleUi: isCircleUi,
+                  maskColor: Colors.white.withAlpha(100),
+                  cornerDotBuilder: (size, cornerIndex) => const DotControl(color: Colors.indigo),
                 );
               }),
             ),
-          ),
-          Row(
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.undo),
-                tooltip: 'Undo',
-                onPressed: () => editorKey.currentState!.reset(),
-              ),
-            ],
           ),
         ],
       ),
     );
   }
+}
 
-  _save(BuildContext context) {
-    final Rect? cropRect = editorKey.currentState!.getCropRect();
-    var data = editorKey.currentState?.rawImageData;
-
-    if (data != null && cropRect != null) {
-      Image? src = decodeImage(data);
-      if (src != null) {
-        src = bakeOrientation(src);
-        src = copyCrop(src, cropRect.left.toInt(), cropRect.top.toInt(), cropRect.width.toInt(), cropRect.height.toInt());
-        var fileData = encodeJpg(src, quality: 50);
-        return Navigator.pop(context, Uint8List.fromList(fileData));
-      }
-    }
-  }
+_save(BuildContext context, bool isCircleUi, CropController controller) {
+  isCircleUi ? controller.cropCircle() : controller.crop();
 }
