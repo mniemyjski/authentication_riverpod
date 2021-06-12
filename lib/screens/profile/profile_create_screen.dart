@@ -1,6 +1,6 @@
 import 'package:authentication_riverpod/controlers/auth/auth_controller.dart';
 import 'package:authentication_riverpod/models/models.dart';
-import 'package:authentication_riverpod/screens/account/controller/profile_controller.dart';
+import 'package:authentication_riverpod/screens/profile/controller/profile_controller.dart';
 import 'package:authentication_riverpod/screens/sign_in/controllers/sign_in_controller.dart';
 import 'package:authentication_riverpod/utilities/utilities.dart';
 import 'package:authentication_riverpod/widgets/widgets.dart';

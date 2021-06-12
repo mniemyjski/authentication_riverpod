@@ -1,7 +1,7 @@
 import 'package:authentication_riverpod/controlers/auth/auth_controller.dart';
 import 'package:authentication_riverpod/controlers/auth/auth_state.dart';
 import 'package:authentication_riverpod/controlers/controllers.dart';
-import 'package:authentication_riverpod/screens/account/profile_create_screen.dart';
+import 'package:authentication_riverpod/screens/profile/profile_create_screen.dart';
 import 'package:authentication_riverpod/screens/home/home_screen.dart';
 import 'package:authentication_riverpod/screens/screens.dart';
 import 'package:flutter/material.dart';

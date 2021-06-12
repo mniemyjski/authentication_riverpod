@@ -1,7 +1,7 @@
 import 'package:authentication_riverpod/controlers/auth/auth_controller.dart';
 import 'package:authentication_riverpod/models/models.dart';
 import 'package:authentication_riverpod/repositories/repositories.dart';
-import 'package:authentication_riverpod/screens/account/controller/profile_state.dart';
+import 'package:authentication_riverpod/screens/profile/controller/profile_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
